@@ -112,7 +112,7 @@ public class SlidingMenu extends RelativeLayout {
 		/**
 		 * On opened.
 		 */
-		public void onOpened();
+		public void onOpened(int position);
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class SlidingMenu extends RelativeLayout {
 		/**
 		 * On closed.
 		 */
-		public void onClosed();
+		public void onClosed(int position);
 	}
 
 	/**
