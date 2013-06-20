@@ -40,6 +40,7 @@ public class CustomViewAbove extends ViewGroup {
 	private static final int MIN_DISTANCE_FOR_FLING = 25; // dips
 
 	private static final Interpolator sInterpolator = new Interpolator() {
+		@Override
 		public float getInterpolation(float t) {
 			t -= 1.0f;
 			return t * t * t * t * t + 1.0f;
@@ -71,8 +72,8 @@ public class CustomViewAbove extends ViewGroup {
 	 */
 	protected int mActivePointerId = INVALID_POINTER;
 	/**
-	 * Sentinel value for no current active pointer.
-	 * Used by {@link #mActivePointerId}.
+	 * Sentinel value for no current active pointer. Used by
+	 * {@link #mActivePointerId}.
 	 */
 	private static final int INVALID_POINTER = -1;
 
@@ -107,15 +108,13 @@ public class CustomViewAbove extends ViewGroup {
 
 		/**
 		 * This method will be invoked when the current page is scrolled, either
-		 * as part
-		 * of a programmatically initiated smooth scroll or a user initiated
-		 * touch scroll.
+		 * as part of a programmatically initiated smooth scroll or a user
+		 * initiated touch scroll.
 		 * 
 		 * @param position
 		 *            Position index of the first page currently being
-		 *            displayed.
-		 *            Page position+1 will be visible if positionOffset is
-		 *            nonzero.
+		 *            displayed. Page position+1 will be visible if
+		 *            positionOffset is nonzero.
 		 * @param positionOffset
 		 *            Value from [0, 1) indicating the offset from the page at
 		 *            position.
@@ -126,8 +125,7 @@ public class CustomViewAbove extends ViewGroup {
 
 		/**
 		 * This method will be invoked when a new page becomes selected.
-		 * Animation is not
-		 * necessarily complete.
+		 * Animation is not necessarily complete.
 		 * 
 		 * @param position
 		 *            Position index of the new selected page.
@@ -138,17 +136,17 @@ public class CustomViewAbove extends ViewGroup {
 
 	/**
 	 * Simple implementation of the {@link OnPageChangeListener} interface with
-	 * stub
-	 * implementations of each method. Extend this if you do not intend to
-	 * override
-	 * every method of {@link OnPageChangeListener}.
+	 * stub implementations of each method. Extend this if you do not intend to
+	 * override every method of {@link OnPageChangeListener}.
 	 */
 	public static class SimpleOnPageChangeListener implements OnPageChangeListener {
 
+		@Override
 		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 			// This space for rent
 		}
 
+		@Override
 		public void onPageSelected(int position) {
 			// This space for rent
 		}
@@ -179,6 +177,7 @@ public class CustomViewAbove extends ViewGroup {
 		mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
 		mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
 		setInternalPageChangeListener(new SimpleOnPageChangeListener() {
+			@Override
 			public void onPageSelected(int position) {
 				if (mViewBehind != null) {
 					switch (position) {
@@ -200,10 +199,8 @@ public class CustomViewAbove extends ViewGroup {
 
 	/**
 	 * Set the currently selected page. If the CustomViewPager has already been
-	 * through its first
-	 * layout there will be a smooth animated transition between the current
-	 * item and the
-	 * specified item.
+	 * through its first layout there will be a smooth animated transition
+	 * between the current item and the specified item.
 	 * 
 	 * @param item
 	 *            Item index to select
@@ -261,8 +258,7 @@ public class CustomViewAbove extends ViewGroup {
 
 	/**
 	 * Set a listener that will be invoked whenever the page changes or is
-	 * incrementally
-	 * scrolled. See {@link OnPageChangeListener}.
+	 * incrementally scrolled. See {@link OnPageChangeListener}.
 	 * 
 	 * @param listener
 	 *            Listener to set
@@ -272,13 +268,9 @@ public class CustomViewAbove extends ViewGroup {
 	}
 
 	/*
-	 * public void setOnOpenListener(OnOpenListener l) {
-	 * mOpenListener = l;
-	 * }
+	 * public void setOnOpenListener(OnOpenListener l) { mOpenListener = l; }
 	 * 
-	 * public void setOnCloseListener(OnCloseListener l) {
-	 * mCloseListener = l;
-	 * }
+	 * public void setOnCloseListener(OnCloseListener l) { mCloseListener = l; }
 	 */
 	public void setOnOpenedListener(OnOpenedListener l) {
 		mOpenedListener = l;
@@ -326,7 +318,7 @@ public class CustomViewAbove extends ViewGroup {
 	float distanceInfluenceForSnapDuration(float f) {
 		f -= 0.5f; // center the values about 0.
 		f *= 0.3f * Math.PI / 2.0f;
-		return (float) FloatMath.sin(f);
+		return FloatMath.sin(f);
 	}
 
 	public int getDestScrollX(int page) {
@@ -359,9 +351,10 @@ public class CustomViewAbove extends ViewGroup {
 	private boolean isInIgnoredView(MotionEvent ev) {
 		Rect rect = new Rect();
 		for (View v : mIgnoredViews) {
-			v.getHitRect(rect);
-			if (rect.contains((int) ev.getX(), (int) ev.getY()))
+			v.getGlobalVisibleRect(rect);
+			if (rect.contains((int) ev.getX(), (int) ev.getY())) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -429,11 +422,13 @@ public class CustomViewAbove extends ViewGroup {
 		if (dx == 0 && dy == 0) {
 			completeScroll();
 			if (isMenuOpen()) {
-				if (mOpenedListener != null)
+				if (mOpenedListener != null) {
 					mOpenedListener.onOpened(mCurItem);
+				}
 			} else {
-				if (mClosedListener != null)
+				if (mClosedListener != null) {
 					mClosedListener.onClosed(mLastItem);
+				}
 			}
 			return;
 		}
@@ -462,8 +457,9 @@ public class CustomViewAbove extends ViewGroup {
 	}
 
 	public void setContent(View v) {
-		if (mContent != null)
+		if (mContent != null) {
 			this.removeView(mContent);
+		}
 		mContent = v;
 		addView(mContent);
 	}
@@ -552,14 +548,10 @@ public class CustomViewAbove extends ViewGroup {
 
 	/**
 	 * This method will be invoked when the current page is scrolled, either as
-	 * part
-	 * of a programmatically initiated smooth scroll or a user initiated touch
-	 * scroll.
-	 * If you override this method you must call through to the superclass
-	 * implementation
-	 * (e.g. super.onPageScrolled(position, offset, offsetPixels)) before
-	 * onPageScrolled
-	 * returns.
+	 * part of a programmatically initiated smooth scroll or a user initiated
+	 * touch scroll. If you override this method you must call through to the
+	 * superclass implementation (e.g. super.onPageScrolled(position, offset,
+	 * offsetPixels)) before onPageScrolled returns.
 	 * 
 	 * @param position
 	 *            Position index of the first page currently being displayed.
@@ -593,11 +585,13 @@ public class CustomViewAbove extends ViewGroup {
 				scrollTo(x, y);
 			}
 			if (isMenuOpen()) {
-				if (mOpenedListener != null)
+				if (mOpenedListener != null) {
 					mOpenedListener.onOpened(mCurItem);
+				}
 			} else {
-				if (mClosedListener != null)
+				if (mClosedListener != null) {
 					mClosedListener.onClosed(mLastItem);
+				}
 			}
 		}
 		mScrolling = false;
@@ -624,7 +618,7 @@ public class CustomViewAbove extends ViewGroup {
 			case SlidingMenu.TOUCHMODE_NONE:
 				return false;
 			case SlidingMenu.TOUCHMODE_MARGIN:
-				return mViewBehind.marginTouchAllowed(mContent, x);
+				return !isInIgnoredView(ev) && mViewBehind.marginTouchAllowed(mContent, x);
 			}
 		}
 		return false;
@@ -637,15 +631,17 @@ public class CustomViewAbove extends ViewGroup {
 		} else {
 			allowed = mViewBehind.menuClosedSlideAllowed(dx);
 		}
-		if (DEBUG)
+		if (DEBUG) {
 			Log.v(TAG, "this slide allowed " + allowed + " dx: " + dx);
+		}
 		return allowed;
 	}
 
 	private int getPointerIndex(MotionEvent ev, int id) {
 		int activePointerIndex = MotionEventCompat.findPointerIndex(ev, id);
-		if (activePointerIndex == -1)
+		if (activePointerIndex == -1) {
 			mActivePointerId = INVALID_POINTER;
+		}
 		return activePointerIndex;
 	}
 
@@ -654,14 +650,17 @@ public class CustomViewAbove extends ViewGroup {
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
 
-		if (!mEnabled)
+		if (!mEnabled) {
 			return false;
+		}
 
 		final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
 
-		if (DEBUG)
-			if (action == MotionEvent.ACTION_DOWN)
+		if (DEBUG) {
+			if (action == MotionEvent.ACTION_DOWN) {
 				Log.v(TAG, "Received ACTION_DOWN");
+			}
+		}
 
 		if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP
 				|| (action != MotionEvent.ACTION_DOWN && mIsUnableToDrag)) {
@@ -676,8 +675,9 @@ public class CustomViewAbove extends ViewGroup {
 		case MotionEvent.ACTION_DOWN:
 			int index = MotionEventCompat.getActionIndex(ev);
 			mActivePointerId = MotionEventCompat.getPointerId(ev, index);
-			if (mActivePointerId == INVALID_POINTER)
+			if (mActivePointerId == INVALID_POINTER) {
 				break;
+			}
 			mLastMotionX = mInitialMotionX = MotionEventCompat.getX(ev, index);
 			mLastMotionY = MotionEventCompat.getY(ev, index);
 			if (thisTouchAllowed(ev)) {
@@ -707,11 +707,13 @@ public class CustomViewAbove extends ViewGroup {
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
 
-		if (!mEnabled)
+		if (!mEnabled) {
 			return false;
+		}
 
-		if (!mIsBeingDragged && !thisTouchAllowed(ev))
+		if (!mIsBeingDragged && !thisTouchAllowed(ev)) {
 			return false;
+		}
 
 		// if (!mIsBeingDragged && !mQuickReturn)
 		// return false;
@@ -739,14 +741,16 @@ public class CustomViewAbove extends ViewGroup {
 		case MotionEvent.ACTION_MOVE:
 			if (!mIsBeingDragged) {
 				determineDrag(ev);
-				if (mIsUnableToDrag)
+				if (mIsUnableToDrag) {
 					return false;
+				}
 			}
 			if (mIsBeingDragged) {
 				// Scroll to follow the motion event
 				final int activePointerIndex = getPointerIndex(ev, mActivePointerId);
-				if (mActivePointerId == INVALID_POINTER)
+				if (mActivePointerId == INVALID_POINTER) {
 					break;
+				}
 				final float x = MotionEventCompat.getX(ev, activePointerIndex);
 				final float deltaX = mLastMotionX - x;
 				mLastMotionX = x;
@@ -809,8 +813,9 @@ public class CustomViewAbove extends ViewGroup {
 		case MotionEventCompat.ACTION_POINTER_UP:
 			onSecondaryPointerUp(ev);
 			int pointerIndex = getPointerIndex(ev, mActivePointerId);
-			if (mActivePointerId == INVALID_POINTER)
+			if (mActivePointerId == INVALID_POINTER) {
 				break;
+			}
 			mLastMotionX = MotionEventCompat.getX(ev, pointerIndex);
 			break;
 		}
@@ -820,8 +825,9 @@ public class CustomViewAbove extends ViewGroup {
 	private void determineDrag(MotionEvent ev) {
 		final int activePointerId = mActivePointerId;
 		final int pointerIndex = getPointerIndex(ev, activePointerId);
-		if (activePointerId == INVALID_POINTER)
+		if (activePointerId == INVALID_POINTER) {
 			return;
+		}
 		final float x = MotionEventCompat.getX(ev, pointerIndex);
 		final float dx = x - mLastMotionX;
 		final float xDiff = Math.abs(dx);
@@ -843,8 +849,9 @@ public class CustomViewAbove extends ViewGroup {
 	public void scrollTo(int x, int y) {
 		super.scrollTo(x, y);
 		mScrollX = x;
-		if (mEnabled)
+		if (mEnabled) {
 			mViewBehind.scrollBehindTo(mContent, x, y);
+		}
 		((SlidingMenu) getParent()).manageLayers(getPercentOpen());
 	}
 
@@ -857,7 +864,7 @@ public class CustomViewAbove extends ViewGroup {
 				targetPage += 1;
 			}
 		} else {
-			targetPage = (int) Math.round(mCurItem + pageOffset);
+			targetPage = Math.round(mCurItem + pageOffset);
 		}
 		return targetPage;
 	}
@@ -879,8 +886,9 @@ public class CustomViewAbove extends ViewGroup {
 	private float mScrollX = 0.0f;
 
 	private void onSecondaryPointerUp(MotionEvent ev) {
-		if (DEBUG)
+		if (DEBUG) {
 			Log.v(TAG, "onSecondaryPointerUp called");
+		}
 		final int pointerIndex = MotionEventCompat.getActionIndex(ev);
 		final int pointerId = MotionEventCompat.getPointerId(ev, pointerIndex);
 		if (pointerId == mActivePointerId) {
@@ -934,8 +942,7 @@ public class CustomViewAbove extends ViewGroup {
 	 *            View to test for horizontal scrollability
 	 * @param checkV
 	 *            Whether the view v passed should itself be checked for
-	 *            scrollability (true),
-	 *            or just its children (false).
+	 *            scrollability (true), or just its children (false).
 	 * @param dx
 	 *            Delta scrolled in pixels
 	 * @param x
@@ -1009,8 +1016,9 @@ public class CustomViewAbove extends ViewGroup {
 
 	public boolean arrowScroll(int direction) {
 		View currentFocused = findFocus();
-		if (currentFocused == this)
+		if (currentFocused == this) {
 			currentFocused = null;
+		}
 
 		boolean handled = false;
 
