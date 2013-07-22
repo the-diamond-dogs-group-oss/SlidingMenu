@@ -254,6 +254,7 @@ public class CustomViewAbove extends ViewGroup {
 			completeScroll();
 			scrollTo(destX, 0);
 		}
+		mQuickReturn = false;
 	}
 
 	/**
@@ -649,7 +650,6 @@ public class CustomViewAbove extends ViewGroup {
 
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
-
 		if (!mEnabled) {
 			return false;
 		}
@@ -706,17 +706,12 @@ public class CustomViewAbove extends ViewGroup {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
-
 		if (!mEnabled) {
 			return false;
 		}
-
 		if (!mIsBeingDragged && !thisTouchAllowed(ev)) {
 			return false;
 		}
-
-		// if (!mIsBeingDragged && !mQuickReturn)
-		// return false;
 
 		final int action = ev.getAction();
 
@@ -834,7 +829,7 @@ public class CustomViewAbove extends ViewGroup {
 		final float y = MotionEventCompat.getY(ev, pointerIndex);
 		final float dy = y - mLastMotionY;
 		final float yDiff = Math.abs(dy);
-		if (xDiff > (isMenuOpen() ? mTouchSlop / 2 : mTouchSlop) && xDiff > yDiff && thisSlideAllowed(dx)) {
+		if (xDiff > mTouchSlop / 2 && xDiff > yDiff && thisSlideAllowed(dx)) {
 			startDrag();
 			mLastMotionX = x;
 			mLastMotionY = y;
