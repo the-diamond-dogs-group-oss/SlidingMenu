@@ -1,0 +1,3 @@
+include ':ActionBarSherlock:actionbarsherlock'
+
+project(':ActionBarSherlock:actionbarsherlock').projectDir=file('../../ActionBarSherlock/actionbarsherlock')
