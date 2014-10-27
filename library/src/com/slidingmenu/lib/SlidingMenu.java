@@ -305,7 +305,7 @@ public class SlidingMenu extends RelativeLayout {
 	 *            either SLIDING_CONTENT or SLIDING_WINDOW
 	 */
 	public void attachToActivity(Activity activity, int slideStyle) {
-		attachToActivity(activity, slideStyle, false);
+		attachToActivity(activity, slideStyle, true);
 	}
 
 	/**
