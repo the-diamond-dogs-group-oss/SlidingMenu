@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- From: file:/D:/IDEA/shared/external/slidingMenu/library/build/intermediates/exploded-aar/shop/actionbarsherlock/unspecified/res/values-w500dp-v13/values.xml -->
-    <eat-comment/>
-    <integer name="abs__max_action_buttons">4</integer>
-</resources>
